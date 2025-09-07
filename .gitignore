@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+
+# Editor directories and files
+.idea
+.vscode
+
+config/**/local*
+
+# ci template files ignore
+.dockerignore
+
+# data base
+mongo_db/

@@ -1,0 +1,9 @@
+**/README.md
+.git/
+.gitignore
+src/
+
+**/.DS_Store
+**.log
+.idea
+.vscode

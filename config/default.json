@@ -1,0 +1,40 @@
+{
+    "app": {
+        "port": "3001",
+        "apiUrl": "http://localhost:3001",
+        "clientURL": "http://localhost:3000"
+    },
+    "mongo": {
+        "url": "mongodb://root:pass12345@mongodb:27017",
+        "dbUser": "root",
+        "dbPass": "pass12345",
+        "authSource": "admin"
+    },
+    "auth": {
+        "salt": "salt",
+        "userSaltLength": 20,
+        "iterations": 1,
+        "hashLength": 64,
+        "hashAlgorithm": "sha512",
+        "github": {
+            "clientId": "",
+            "secret": ""
+        },
+        "jwt": {
+            "algorithm": "HS256",
+            "secret": "secret123",
+            "accessTokenExpires": "15m",
+            "refreshTokenExpires": "30m"
+        }
+    },
+    "mailer": {
+        "host": "smtp.gmail.com",
+        "port": 587,
+        "auth": {
+            "user": "andrew.kazanin.ak@gmail.com",
+            "pass": "iAdmin9384iz10"
+        }
+    }
+}
+
+
