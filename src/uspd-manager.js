@@ -1,4 +1,5 @@
 import * as C from './config.js';
+import { logger } from './utils.js';
 
 class USPDManager {
   constructor() {
@@ -82,7 +83,7 @@ class USPDManager {
 
     for (const [key, uspd] of this.uspdRegistry) {
       if (currentTime - uspd.Time > C.FIVE_MINUTES) {
-        console.log(new Date(), `Deleting inactive device IMEI: ${key}`);
+        logger(`Deleting inactive device IMEI: ${key}`);
         this.deleteUSPD(key);
       }
     }
