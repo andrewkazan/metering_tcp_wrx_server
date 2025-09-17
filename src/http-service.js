@@ -36,21 +36,21 @@ export const httpService = async (req, res) => {
     const formatUrl = new URL(req.url, `http://${req.headers.host}`);
 
     if (req.url === '/uspd/list') {
-      console.log(new Date(), 'Call list url');
+      U.logger('Call list url');
       res.write(JSON.stringify(uspdManager.getAllUSPD()));
       res.end();
       return;
     }
 
     if (req.url === '/uspd/test') {
-      console.log(new Date(), 'Call test url');
+      U.logger('Call test url');
       res.write(JSON.stringify({ message: 'Wrx service OK' }));
       res.end();
       return;
     }
 
     if (req.url.startsWith('/uspd/complexRequest')) {
-      console.log(new Date(), 'Call complex request');
+      U.logger('Call complex request');
 
       try {
         const imei = formatUrl.searchParams.get('imei');
@@ -66,23 +66,23 @@ export const httpService = async (req, res) => {
         const entries = Object.entries(C.complexCommands);
 
         for (const [index, [key, value]] of entries.entries()) {
-          console.log(new Date(), `Complex request for "${key}" | imei: ${imei}`);
+          U.logger(`Complex request for "${key}" | imei: ${imei}`);
 
           try {
             const response = await U.sendCommandToUSPD({ uspd, command: value });
 
             if (response) {
               if (response.hasOwnProperty('error') && response.error) {
-                console.log(new Date(), `Complex request for "${key}": Fail | imei: ${imei} | response: ${response}`);
+                U.logger(`Complex request for "${key}": Fail | imei: ${imei} | response: ${response}`);
                 result[key].error = response.error;
               } else {
                 const formatData = response.toString('hex').toUpperCase();
-                console.log(new Date(), `Complex request for "${key}": Ok | imei: ${imei} | response: ${formatData}`);
+                U.logger(`Complex request for "${key}": Ok | imei: ${imei} | response: ${formatData}`);
                 result[key].data = formatData;
               }
             }
           } catch (e) {
-            console.log(new Date(), `Complex request for "${key}": Fail | imei: ${imei} | error: ${e}`);
+            U.logger(`Complex request for "${key}": Fail | imei: ${imei} | error: ${e}`);
             result[key].error = e.message || String(e);
           }
 

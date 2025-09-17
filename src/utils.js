@@ -1,5 +1,9 @@
 import * as C from './config.js';
 
+export function logger(text) {
+  console.log(new Date(), `${text}`);
+}
+
 function timeoutPromise(ms) {
   let timerId;
 
@@ -24,7 +28,7 @@ export function sendCommandToUSPD({ uspd, command, timeoutMs = C.SEND_METERING_D
   uspd.conn.write(commandBuffer);
   uspd.awaitingResponse = true;
 
-  console.log(new Date(), `Send data to uspd ${uspd.IMEI}:`, command);
+  logger(`Send data to uspd ${uspd.IMEI}: ${command}`);
 
   return new Promise((resolve, reject) => {
     const onData = (buffer) => {

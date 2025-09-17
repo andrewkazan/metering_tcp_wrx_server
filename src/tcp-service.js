@@ -1,7 +1,8 @@
 import { uspdManager } from './uspd-manager.js';
+import { logger } from './utils.js';
 
 export const tpcService = (socket) => {
-  console.log(new Date(), '--- TCP connect ---');
+  logger('--- TCP connect ---');
 
   // CONNECT_DATA_START в битовом представлении
   const firstMessageToSend = Buffer.from([
@@ -12,7 +13,7 @@ export const tpcService = (socket) => {
 
   socket.on('data', (data) => {
     const hexMessage = data.toString('hex').toUpperCase();
-    console.log(new Date(), 'Received data:', hexMessage);
+    logger(`Received data:', ${hexMessage}`);
 
     let source = hexMessage;
 
@@ -28,7 +29,7 @@ export const tpcService = (socket) => {
         uspdManager.renewAttempts();
 
         const imei = Buffer.from(payload.slice(10, 40), 'hex').toString('utf8');
-        console.log(new Date(), `Device connected IMEI: ${imei}`);
+        logger(`Device connected IMEI: ${imei}`);
 
         if (!uspdManager.getUSPD(imei)) {
           uspdManager.addUSPD(imei, {
@@ -46,9 +47,9 @@ export const tpcService = (socket) => {
           currentUSPD.awaitingResponse = false;
         }
 
-        console.log(new Date(), `Updated UspdManager`);
+        logger('Updated UspdManager');
       } else {
-        console.log(new Date(), 'CRC check failed');
+        logger('CRC check failed');
 
         // try to renew connection with right CRC;
         if (uspdManager.attemptsForNewConnection) {
@@ -65,16 +66,16 @@ export const tpcService = (socket) => {
 
       socket.write(secondMessageToSend);
     } else {
-      console.log(new Date(), 'Received data to socket', source);
+      logger(`Received data to socket, source: ${source}`);
     }
   });
 
   socket.on('end', () => {
-    console.log(new Date(), 'Connection ended by the client');
+    logger('Connection ended by client');
   });
 
-  socket.on('close', (hadError) => {
-    console.log(new Date(), 'Connection closed, hadError:', hadError);
+  socket.on('close', (data) => {
+    logger(`Connection closed, data: ${data}`);
   });
 
   socket.on('error', (err) => {
@@ -82,7 +83,7 @@ export const tpcService = (socket) => {
   });
 
   socket.on('timeout', () => {
-    console.log(new Date(), 'Socket timeout');
+    logger('Socket timeout');
     socket.end();
   });
 };
